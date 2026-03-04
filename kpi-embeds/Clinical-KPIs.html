@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Clinical KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #4dc8e8, #3aa8c8); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .facility-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .facility { background: var(--bg); border-radius: 6px; padding: 10px; border: 1px solid var(--border); }
+        .facility .name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .facility .bar-wrap { background: #edebe9; border-radius: 4px; height: 8px; overflow: hidden; }
+        .facility .bar { height: 100%; border-radius: 4px; }
+        .facility .stats { font-size: 11px; color: var(--text2); margin-top: 4px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Clinical Department — Key Performance Indicators</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card good">
+            <div class="label">Residential Census</div>
+            <div class="value">93</div>
+            <div class="sub">108 total capacity (86%)</div>
+        </div>
+        <div class="kpi-card accent">
+            <div class="label">Avg Length of Stay</div>
+            <div class="value">64d</div>
+            <div class="sub">Residential avg across all homes</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">Open Incidents</div>
+            <div class="value">2</div>
+            <div class="sub">1 Under Review / 1 Open</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">IOP + PHP Census</div>
+            <div class="value">65</div>
+            <div class="sub">47 IOP / 18 PHP</div>
+        </div>
+    </div>
+
+    <div class="facility-grid">
+        <div class="facility">
+            <div class="name">Roadrunner Home</div>
+            <div class="bar-wrap"><div class="bar" style="width:100%; background: var(--danger);"></div></div>
+            <div class="stats"><span>16/16</span><span>100%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Blossom House</div>
+            <div class="bar-wrap"><div class="bar" style="width:87.5%; background: var(--warning);"></div></div>
+            <div class="stats"><span>14/16</span><span>88%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Rose Garden</div>
+            <div class="bar-wrap"><div class="bar" style="width:85.7%; background: var(--warning);"></div></div>
+            <div class="stats"><span>12/14</span><span>86%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Rosemonte Home</div>
+            <div class="bar-wrap"><div class="bar" style="width:87.5%; background: var(--warning);"></div></div>
+            <div class="stats"><span>14/16</span><span>88%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Charter Oak</div>
+            <div class="bar-wrap"><div class="bar" style="width:93.75%; background: var(--primary);"></div></div>
+            <div class="stats"><span>15/16</span><span>94%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Mercer Home</div>
+            <div class="bar-wrap"><div class="bar" style="width:75%; background: var(--success);"></div></div>
+            <div class="stats"><span>12/16</span><span>75%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">Friess Home</div>
+            <div class="bar-wrap"><div class="bar" style="width:83.3%; background: var(--warning);"></div></div>
+            <div class="stats"><span>10/12</span><span>83%</span></div>
+        </div>
+        <div class="facility">
+            <div class="name">IOP Clinic</div>
+            <div class="bar-wrap"><div class="bar" style="width:65%; background: var(--accent);"></div></div>
+            <div class="stats"><span>65 active</span><span>IOP+PHP</span></div>
+        </div>
+    </div>
+</body>
+</html>

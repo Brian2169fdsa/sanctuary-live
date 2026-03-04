@@ -1,0 +1,395 @@
+{
+  "name": "Sanctuary Operations Hub",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SharePoint Online List",
+        "connectionDetails": {
+          "protocol": "sharepoint",
+          "address": {
+            "url": "https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev"
+          }
+        },
+        "credential": {
+          "AuthenticationKind": "OAuth2"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "DateTable",
+        "columns": [
+          { "name": "Date", "dataType": "dateTime", "isKey": true, "formatString": "yyyy-MM-dd" },
+          { "name": "Year", "dataType": "int64" },
+          { "name": "Month", "dataType": "int64" },
+          { "name": "MonthName", "dataType": "string" },
+          { "name": "MonthYear", "dataType": "string" },
+          { "name": "Quarter", "dataType": "string" },
+          { "name": "QuarterYear", "dataType": "string" },
+          { "name": "WeekNum", "dataType": "int64" },
+          { "name": "DayOfWeek", "dataType": "int64" },
+          { "name": "DayName", "dataType": "string" },
+          { "name": "IsCurrentMonth", "dataType": "boolean" },
+          { "name": "IsCurrentQuarter", "dataType": "boolean" },
+          { "name": "MonthSort", "dataType": "int64" }
+        ],
+        "partitions": [
+          {
+            "name": "DateTable",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "ADDCOLUMNS(CALENDAR(DATE(2025,1,1), DATE(2026,12,31)), \"Year\", YEAR([Date]), \"Month\", MONTH([Date]), \"MonthName\", FORMAT([Date], \"MMMM\"), \"MonthYear\", FORMAT([Date], \"MMM YYYY\"), \"Quarter\", \"Q\" & CEILING(MONTH([Date])/3, 1), \"QuarterYear\", \"Q\" & CEILING(MONTH([Date])/3, 1) & \" \" & YEAR([Date]), \"WeekNum\", WEEKNUM([Date]), \"DayOfWeek\", WEEKDAY([Date]), \"DayName\", FORMAT([Date], \"dddd\"), \"IsCurrentMonth\", IF(MONTH([Date]) = MONTH(TODAY()) && YEAR([Date]) = YEAR(TODAY()), TRUE, FALSE), \"IsCurrentQuarter\", IF(CEILING(MONTH([Date])/3,1) = CEILING(MONTH(TODAY())/3,1) && YEAR([Date]) = YEAR(TODAY()), TRUE, FALSE), \"MonthSort\", YEAR([Date]) * 100 + MONTH([Date]))"
+            }
+          }
+        ],
+        "annotations": [
+          { "name": "IsDateTable", "value": "true" },
+          { "name": "DateColumnName", "value": "Date" }
+        ]
+      },
+      {
+        "name": "FacilityDim",
+        "columns": [
+          { "name": "FacilityKey", "dataType": "int64", "isKey": true },
+          { "name": "FacilityName", "dataType": "string" },
+          { "name": "FacilityType", "dataType": "string" },
+          { "name": "LOC", "dataType": "string" },
+          { "name": "MaxCapacity", "dataType": "int64" },
+          { "name": "Address", "dataType": "string" },
+          { "name": "Gender", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "FacilityDim",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "DATATABLE(\"FacilityKey\", INTEGER, \"FacilityName\", STRING, \"FacilityType\", STRING, \"LOC\", STRING, \"MaxCapacity\", INTEGER, \"Address\", STRING, \"Gender\", STRING, {{1, \"Roadrunner Home\", \"Residential\", \"RES\", 16, \"Phoenix, AZ\", \"Men's\"}, {2, \"Blossom House\", \"Residential\", \"RES\", 16, \"Phoenix, AZ\", \"Women's (ASU)\"}, {3, \"Rose Garden\", \"Residential\", \"RES\", 14, \"Phoenix, AZ\", \"Co-Ed\"}, {4, \"Rosemonte Home\", \"Residential\", \"RES\", 16, \"Phoenix, AZ\", \"Men's\"}, {5, \"Charter Oak Home\", \"Residential\", \"RES\", 16, \"Phoenix, AZ\", \"Men's\"}, {6, \"Mercer Home\", \"Residential\", \"RES\", 16, \"Phoenix, AZ\", \"Co-Ed\"}, {7, \"Friess Home\", \"Residential\", \"RES\", 12, \"Phoenix, AZ\", \"Adolescent\"}, {8, \"IOP Clinic\", \"Outpatient\", \"IOP/PHP\", 999, \"11645 N Cave Creek Rd\", \"Co-Ed\"}})"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Facility Census Tracker",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "Facility", "dataType": "string" },
+          { "name": "LOC", "dataType": "string" },
+          { "name": "Census", "dataType": "int64" },
+          { "name": "Capacity", "dataType": "int64" },
+          { "name": "ALOS", "dataType": "double" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "Notes", "dataType": "string" },
+          { "name": "LastUpdated", "dataType": "dateTime" }
+        ],
+        "partitions": [
+          {
+            "name": "Facility Census Tracker",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), FacilityCensusTracker = Source{[Title=\"Facility Census Tracker\"]}[Items] in FacilityCensusTracker"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Compliance Audit Calendar",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "AuditDate", "dataType": "dateTime" },
+          { "name": "AuditType", "dataType": "string" },
+          { "name": "Scope", "dataType": "string" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Compliance Audit Calendar",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), ComplianceAuditCalendar = Source{[Title=\"Compliance Audit Calendar\"]}[Items] in ComplianceAuditCalendar"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Incident Reports",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "IncidentID", "dataType": "string" },
+          { "name": "IncidentDate", "dataType": "dateTime" },
+          { "name": "Facility", "dataType": "string" },
+          { "name": "Category", "dataType": "string" },
+          { "name": "Severity", "dataType": "string" },
+          { "name": "Description", "dataType": "string" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "ResolutionDate", "dataType": "dateTime" },
+          { "name": "CorrectiveAction", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Incident Reports",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), IncidentReports = Source{[Title=\"Incident Reports\"]}[Items] in IncidentReports"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Admissions Pipeline",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "ReferralID", "dataType": "string" },
+          { "name": "ReferralDate", "dataType": "dateTime" },
+          { "name": "Source", "dataType": "string" },
+          { "name": "SourceDetail", "dataType": "string" },
+          { "name": "PrimaryDx", "dataType": "string" },
+          { "name": "Insurance", "dataType": "string" },
+          { "name": "LOCRequested", "dataType": "string" },
+          { "name": "FacilityAssigned", "dataType": "string" },
+          { "name": "Stage", "dataType": "string" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "AssessmentDate", "dataType": "dateTime" },
+          { "name": "AdmitDate", "dataType": "dateTime" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Admissions Pipeline",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), AdmissionsPipeline = Source{[Title=\"Admissions Pipeline\"]}[Items] in AdmissionsPipeline"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Referral Partners",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "PartnerName", "dataType": "string" },
+          { "name": "PartnerType", "dataType": "string" },
+          { "name": "Territory", "dataType": "string" },
+          { "name": "ContactName", "dataType": "string" },
+          { "name": "ContactEmail", "dataType": "string" },
+          { "name": "ContactPhone", "dataType": "string" },
+          { "name": "ReferralsMTD", "dataType": "int64" },
+          { "name": "AdmitsMTD", "dataType": "int64" },
+          { "name": "LastContact", "dataType": "dateTime" },
+          { "name": "AgreementOnFile", "dataType": "boolean" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Referral Partners",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), ReferralPartners = Source{[Title=\"Referral Partners\"]}[Items] in ReferralPartners"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Staff Credential Tracker",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "StaffName", "dataType": "string" },
+          { "name": "Role", "dataType": "string" },
+          { "name": "Facility", "dataType": "string" },
+          { "name": "LicenseNumber", "dataType": "string" },
+          { "name": "LicenseExpiration", "dataType": "dateTime" },
+          { "name": "FingerprintClearance", "dataType": "dateTime" },
+          { "name": "CPRExpiration", "dataType": "dateTime" },
+          { "name": "HIPAATrainingDate", "dataType": "dateTime" },
+          { "name": "HIPAADueDate", "dataType": "dateTime" },
+          { "name": "CulturalCompDate", "dataType": "dateTime" },
+          { "name": "TraumaInformedDate", "dataType": "dateTime" },
+          { "name": "MandatedReporterDate", "dataType": "dateTime" },
+          { "name": "SupervisionCurrent", "dataType": "boolean" },
+          { "name": "Status", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Staff Credential Tracker",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), StaffCredentialTracker = Source{[Title=\"Staff Credential Tracker\"]}[Items] in StaffCredentialTracker"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Revenue by Payer",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "Month", "dataType": "dateTime" },
+          { "name": "Payer", "dataType": "string" },
+          { "name": "Revenue", "dataType": "decimal", "formatString": "$#,##0" },
+          { "name": "ClaimCount", "dataType": "int64" },
+          { "name": "DenialCount", "dataType": "int64" },
+          { "name": "CleanClaimPct", "dataType": "double", "formatString": "0.0%" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Revenue by Payer",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), RevenueByPayer = Source{[Title=\"Revenue by Payer\"]}[Items] in RevenueByPayer"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Reentry Participants",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "ParticipantID", "dataType": "string" },
+          { "name": "EnrollDate", "dataType": "dateTime" },
+          { "name": "Phase", "dataType": "string" },
+          { "name": "Facility", "dataType": "string" },
+          { "name": "HousingStatus", "dataType": "string" },
+          { "name": "EmploymentStatus", "dataType": "string" },
+          { "name": "CourtInvolved", "dataType": "boolean" },
+          { "name": "CourtCompliance", "dataType": "string" },
+          { "name": "NextStep", "dataType": "string" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Reentry Participants",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), ReentryParticipants = Source{[Title=\"Reentry Participants\"]}[Items] in ReentryParticipants"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Marketing Campaigns",
+        "columns": [
+          { "name": "Title", "dataType": "string" },
+          { "name": "CampaignName", "dataType": "string" },
+          { "name": "Channel", "dataType": "string" },
+          { "name": "SpendMTD", "dataType": "decimal", "formatString": "$#,##0" },
+          { "name": "Leads", "dataType": "int64" },
+          { "name": "CPL", "dataType": "decimal", "formatString": "$#,##0" },
+          { "name": "Admits", "dataType": "int64" },
+          { "name": "CPA", "dataType": "decimal", "formatString": "$#,##0" },
+          { "name": "Status", "dataType": "string" },
+          { "name": "StartDate", "dataType": "dateTime" },
+          { "name": "EndDate", "dataType": "dateTime" },
+          { "name": "Notes", "dataType": "string" }
+        ],
+        "partitions": [
+          {
+            "name": "Marketing Campaigns",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": "let Source = SharePoint.Tables(\"https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev\", [Implementation=\"2.0\"]), MarketingCampaigns = Source{[Title=\"Marketing Campaigns\"]}[Items] in MarketingCampaigns"
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "DateTable_to_Census",
+        "fromTable": "Facility Census Tracker",
+        "fromColumn": "LastUpdated",
+        "toTable": "DateTable",
+        "toColumn": "Date",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "DateTable_to_Admissions",
+        "fromTable": "Admissions Pipeline",
+        "fromColumn": "ReferralDate",
+        "toTable": "DateTable",
+        "toColumn": "Date",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "DateTable_to_Incidents",
+        "fromTable": "Incident Reports",
+        "fromColumn": "IncidentDate",
+        "toTable": "DateTable",
+        "toColumn": "Date",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "DateTable_to_Revenue",
+        "fromTable": "Revenue by Payer",
+        "fromColumn": "Month",
+        "toTable": "DateTable",
+        "toColumn": "Date",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "DateTable_to_Audits",
+        "fromTable": "Compliance Audit Calendar",
+        "fromColumn": "AuditDate",
+        "toTable": "DateTable",
+        "toColumn": "Date",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "FacilityDim_to_Census",
+        "fromTable": "Facility Census Tracker",
+        "fromColumn": "Facility",
+        "toTable": "FacilityDim",
+        "toColumn": "FacilityName",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "FacilityDim_to_Incidents",
+        "fromTable": "Incident Reports",
+        "fromColumn": "Facility",
+        "toTable": "FacilityDim",
+        "toColumn": "FacilityName",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      },
+      {
+        "name": "Partners_to_Admissions",
+        "fromTable": "Admissions Pipeline",
+        "fromColumn": "SourceDetail",
+        "toTable": "Referral Partners",
+        "toColumn": "PartnerName",
+        "isActive": true,
+        "crossFilteringBehavior": "oneDirection"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "700"
+      },
+      {
+        "name": "ModelDescription",
+        "value": "Sanctuary Recovery Centers Operations Hub data model. Connects to SharePoint Online lists for census, admissions, compliance, revenue, staffing, reentry, referrals, and marketing data."
+      }
+    ]
+  }
+}

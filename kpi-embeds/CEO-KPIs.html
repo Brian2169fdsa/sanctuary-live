@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — CEO Dashboard KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #e8732a, #d16826); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .status-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .status-item { background: var(--bg); border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .status-dot.red { background: var(--danger); }
+        .status-dot.green { background: var(--success); }
+        .status-dot.yellow { background: var(--warning); }
+        .status-dot.blue { background: var(--accent); }
+        .status-item .label { font-size: 12px; color: var(--text2); }
+        .status-item .val { font-size: 14px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>CEO Dashboard — Key Performance Indicators</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card good">
+            <div class="label">Total Census</div>
+            <div class="value">158</div>
+            <div class="sub">93 Residential / 47 IOP / 18 PHP</div>
+        </div>
+        <div class="kpi-card accent">
+            <div class="label">Revenue MTD</div>
+            <div class="value">$1.65M</div>
+            <div class="sub">100% of $1.65M target</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">Occupancy Rate</div>
+            <div class="value">86%</div>
+            <div class="sub">93/108 residential beds filled</div>
+        </div>
+        <div class="kpi-card alert">
+            <div class="label">Compliance Alerts</div>
+            <div class="value">3</div>
+            <div class="sub">1 overdue / 2 upcoming 30d</div>
+        </div>
+    </div>
+
+    <div class="status-row">
+        <div class="status-item">
+            <span class="status-dot green"></span>
+            <div><div class="label">Clean Claim Rate</div><div class="val">95.4%</div></div>
+        </div>
+        <div class="status-item">
+            <span class="status-dot blue"></span>
+            <div><div class="label">Admits MTD</div><div class="val">18</div></div>
+        </div>
+        <div class="status-item">
+            <span class="status-dot yellow"></span>
+            <div><div class="label">Open Incidents</div><div class="val">2</div></div>
+        </div>
+        <div class="status-item">
+            <span class="status-dot green"></span>
+            <div><div class="label">Staff Compliance</div><div class="val">87%</div></div>
+        </div>
+    </div>
+</body>
+</html>

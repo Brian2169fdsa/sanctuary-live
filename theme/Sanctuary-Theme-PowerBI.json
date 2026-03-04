@@ -1,0 +1,71 @@
+{
+    "name": "Sanctuary Recovery Centers",
+    "dataColors": [
+        "#e8732a", "#4dc8e8", "#f5a623", "#107c10",
+        "#d83b01", "#3aa8c8", "#986f0b", "#605e5c"
+    ],
+    "background": "#ffffff",
+    "foreground": "#323130",
+    "tableAccent": "#e8732a",
+    "maximum": "#e8732a",
+    "center": "#f5a623",
+    "minimum": "#107c10",
+    "good": "#107c10",
+    "neutral": "#f5a623",
+    "bad": "#d83b01",
+    "visualStyles": {
+        "*": {
+            "*": {
+                "title": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 12,
+                    "bold": true,
+                    "color": {"solid": {"color": "#2b2b2b"}}
+                }],
+                "subTitle": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 10,
+                    "color": {"solid": {"color": "#605e5c"}}
+                }],
+                "labels": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 10,
+                    "color": {"solid": {"color": "#323130"}}
+                }],
+                "categoryAxis": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 10,
+                    "labelColor": {"solid": {"color": "#605e5c"}}
+                }],
+                "valueAxis": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 10,
+                    "labelColor": {"solid": {"color": "#605e5c"}}
+                }]
+            },
+            "card": {
+                "calloutValue": [{
+                    "fontFamily": "Segoe UI Semibold",
+                    "fontSize": 28,
+                    "color": {"solid": {"color": "#323130"}}
+                }],
+                "categoryLabel": [{
+                    "fontFamily": "Segoe UI",
+                    "fontSize": 11,
+                    "color": {"solid": {"color": "#605e5c"}}
+                }]
+            }
+        },
+        "page": {
+            "*": {
+                "background": [{
+                    "color": {"solid": {"color": "#faf9f8"}},
+                    "transparency": 0
+                }],
+                "outspace": [{
+                    "color": {"solid": {"color": "#f3f2f1"}}
+                }]
+            }
+        }
+    }
+}
