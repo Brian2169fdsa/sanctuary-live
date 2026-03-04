@@ -1,0 +1,10 @@
+{
+    "ceo_dashboard": "https://{GITHUB_PAGES_URL}/CEO-KPIs.html",
+    "clinical_dashboard": "https://{GITHUB_PAGES_URL}/Clinical-KPIs.html",
+    "admissions_dashboard": "https://{GITHUB_PAGES_URL}/Admissions-KPIs.html",
+    "marketing_dashboard": "https://{GITHUB_PAGES_URL}/Marketing-KPIs.html",
+    "bd_dashboard": "https://{GITHUB_PAGES_URL}/BD-KPIs.html",
+    "hr_dashboard": "https://{GITHUB_PAGES_URL}/HR-KPIs.html",
+    "admin_dashboard": "https://{GITHUB_PAGES_URL}/Admin-KPIs.html",
+    "reentry_dashboard": "https://{GITHUB_PAGES_URL}/Reentry-KPIs.html"
+}

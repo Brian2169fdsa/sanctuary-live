@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Marketing KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #f5a623, #986f0b); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .channel-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .channel-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: var(--text2); padding: 8px; border-bottom: 2px solid var(--border); }
+        .channel-table td { padding: 8px; font-size: 13px; border-bottom: 1px solid var(--border); }
+        .channel-table tr:hover { background: var(--bg); }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge.live { background: #e6f4e6; color: var(--success); }
+        .badge.best { background: #e6f4e6; color: var(--success); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Marketing — Channel Performance</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card accent">
+            <div class="label">Total Spend MTD</div>
+            <div class="value">$29.3K</div>
+            <div class="sub">6 active channels</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Total Leads</div>
+            <div class="value">360</div>
+            <div class="sub">Avg CPL: $81</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Total Admits</div>
+            <div class="value">46</div>
+            <div class="sub">Avg CPA: $637</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Best ROI Channel</div>
+            <div class="value">SEO</div>
+            <div class="sub">$36 CPL / $409 CPA</div>
+        </div>
+    </div>
+
+    <table class="channel-table">
+        <thead>
+            <tr><th>Channel</th><th>Spend</th><th>Leads</th><th>CPL</th><th>Admits</th><th>CPA</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Google Ads</td><td>$12,500</td><td>89</td><td>$140</td><td>8</td><td>$1,563</td><td><span class="badge live">Live</span></td></tr>
+            <tr><td><strong>SEO / Organic</strong></td><td>$4,500</td><td>124</td><td>$36</td><td>11</td><td>$409</td><td><span class="badge best">Best ROI</span></td></tr>
+            <tr><td>Facebook / Instagram</td><td>$6,800</td><td>52</td><td>$131</td><td>3</td><td>$2,267</td><td><span class="badge live">Live</span></td></tr>
+            <tr><td><strong>Referral Partners</strong></td><td>$2,200</td><td>49</td><td>$45</td><td>18</td><td>$122</td><td><span class="badge best">Top Conv.</span></td></tr>
+            <tr><td>Community Events</td><td>$1,800</td><td>15</td><td>$120</td><td>2</td><td>$900</td><td><span class="badge live">Live</span></td></tr>
+            <tr><td>LegitScript / Dirs</td><td>$1,500</td><td>31</td><td>$48</td><td>4</td><td>$375</td><td><span class="badge live">Live</span></td></tr>
+        </tbody>
+    </table>
+</body>
+</html>

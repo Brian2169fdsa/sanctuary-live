@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Admissions KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #e8732a, #d16826); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .funnel { margin-top: 8px; }
+        .funnel-step { display: flex; align-items: center; margin-bottom: 4px; }
+        .funnel-bar { height: 28px; background: var(--primary); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; transition: width 0.5s; }
+        .funnel-label { font-size: 12px; color: var(--text2); width: 120px; text-align: right; padding-right: 8px; flex-shrink: 0; }
+        .source-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 16px; }
+        .source { background: var(--bg); border-radius: 6px; padding: 10px; text-align: center; border: 1px solid var(--border); }
+        .source .name { font-size: 11px; color: var(--text2); margin-bottom: 2px; }
+        .source .count { font-size: 20px; font-weight: 700; color: var(--text); }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Admissions — Pipeline &amp; Performance</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card accent">
+            <div class="label">Leads MTD</div>
+            <div class="value">42</div>
+            <div class="sub">+8% vs Feb</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Admits MTD</div>
+            <div class="value">18</div>
+            <div class="sub">43% conversion rate</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">Avg Days to Admit</div>
+            <div class="value">3.2</div>
+            <div class="sub">Target: &lt;4 days</div>
+        </div>
+        <div class="kpi-card alert">
+            <div class="label">Waitlisted</div>
+            <div class="value">4</div>
+            <div class="sub">Roadrunner at capacity</div>
+        </div>
+    </div>
+
+    <div class="funnel">
+        <div class="funnel-step"><span class="funnel-label">Leads</span><div class="funnel-bar" style="width: 100%; background: #ef8f52;">42</div></div>
+        <div class="funnel-step"><span class="funnel-label">Screened</span><div class="funnel-bar" style="width: 78%; background: #e8732a;">33</div></div>
+        <div class="funnel-step"><span class="funnel-label">VOB Complete</span><div class="funnel-bar" style="width: 62%; background: #d16826;">26</div></div>
+        <div class="funnel-step"><span class="funnel-label">Assessment</span><div class="funnel-bar" style="width: 52%; background: #b05820;">22</div></div>
+        <div class="funnel-step"><span class="funnel-label">Admitted</span><div class="funnel-bar" style="width: 43%; background: #824118;">18</div></div>
+    </div>
+
+    <div class="source-grid">
+        <div class="source"><div class="name">Hospital ED</div><div class="count">12</div></div>
+        <div class="source"><div class="name">Self-Referral</div><div class="count">8</div></div>
+        <div class="source"><div class="name">Probation</div><div class="count">6</div></div>
+        <div class="source"><div class="name">Crisis Line</div><div class="count">5</div></div>
+        <div class="source"><div class="name">Therapist</div><div class="count">4</div></div>
+        <div class="source"><div class="name">Alumni</div><div class="count">3</div></div>
+        <div class="source"><div class="name">Sober Living</div><div class="count">2</div></div>
+        <div class="source"><div class="name">Community</div><div class="count">2</div></div>
+    </div>
+</body>
+</html>

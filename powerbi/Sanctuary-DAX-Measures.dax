@@ -1,0 +1,544 @@
+// ============================================================================
+// Sanctuary Recovery Centers — Power BI DAX Measures
+// ============================================================================
+// All measures for the Sanctuary Operations Hub Power BI report.
+// Organized by department/function.
+//
+// Data Sources: SharePoint Online Lists via SharePoint List connector
+// Site URL: https://sanctuaryrecoverycenters48.sharepoint.com/sites/ops-hub-dev
+// ============================================================================
+
+
+// =============================================================================
+// CALCULATED TABLE: DateTable
+// =============================================================================
+
+DateTable =
+ADDCOLUMNS(
+    CALENDAR(DATE(2025,1,1), DATE(2026,12,31)),
+    "Year", YEAR([Date]),
+    "Month", MONTH([Date]),
+    "MonthName", FORMAT([Date], "MMMM"),
+    "MonthYear", FORMAT([Date], "MMM YYYY"),
+    "Quarter", "Q" & CEILING(MONTH([Date])/3, 1),
+    "QuarterYear", "Q" & CEILING(MONTH([Date])/3, 1) & " " & YEAR([Date]),
+    "WeekNum", WEEKNUM([Date]),
+    "DayOfWeek", WEEKDAY([Date]),
+    "DayName", FORMAT([Date], "dddd"),
+    "IsCurrentMonth", IF(
+        MONTH([Date]) = MONTH(TODAY()) && YEAR([Date]) = YEAR(TODAY()),
+        TRUE, FALSE
+    ),
+    "IsCurrentQuarter", IF(
+        CEILING(MONTH([Date])/3, 1) = CEILING(MONTH(TODAY())/3, 1) &&
+        YEAR([Date]) = YEAR(TODAY()),
+        TRUE, FALSE
+    ),
+    "MonthSort", YEAR([Date]) * 100 + MONTH([Date])
+)
+
+
+// =============================================================================
+// CALCULATED TABLE: FacilityDim
+// =============================================================================
+
+FacilityDim =
+DATATABLE(
+    "FacilityKey", INTEGER,
+    "FacilityName", STRING,
+    "FacilityType", STRING,
+    "LOC", STRING,
+    "MaxCapacity", INTEGER,
+    "Address", STRING,
+    "Gender", STRING,
+    {
+        {1, "Roadrunner Home", "Residential", "RES", 16, "Phoenix, AZ", "Men's"},
+        {2, "Blossom House", "Residential", "RES", 16, "Phoenix, AZ", "Women's (ASU)"},
+        {3, "Rose Garden", "Residential", "RES", 14, "Phoenix, AZ", "Co-Ed"},
+        {4, "Rosemonte Home", "Residential", "RES", 16, "Phoenix, AZ", "Men's"},
+        {5, "Charter Oak Home", "Residential", "RES", 16, "Phoenix, AZ", "Men's"},
+        {6, "Mercer Home", "Residential", "RES", 16, "Phoenix, AZ", "Co-Ed"},
+        {7, "Friess Home", "Residential", "RES", 12, "Phoenix, AZ", "Adolescent"},
+        {8, "IOP Clinic", "Outpatient", "IOP/PHP", 999, "11645 N Cave Creek Rd", "Co-Ed"}
+    }
+)
+
+
+// =============================================================================
+// CENSUS & OCCUPANCY MEASURES
+// =============================================================================
+
+Total Census =
+SUM('Facility Census Tracker'[Census])
+
+Total Capacity =
+SUMX(
+    FILTER(FacilityDim, FacilityDim[LOC] = "RES"),
+    FacilityDim[MaxCapacity]
+)
+
+Occupancy Rate =
+DIVIDE([Total Census], [Total Capacity], 0)
+
+Residential Census =
+CALCULATE(
+    SUM('Facility Census Tracker'[Census]),
+    'Facility Census Tracker'[LOC] = "Residential"
+)
+
+IOP Census =
+CALCULATE(
+    SUM('Facility Census Tracker'[Census]),
+    'Facility Census Tracker'[LOC] = "IOP"
+)
+
+PHP Census =
+CALCULATE(
+    SUM('Facility Census Tracker'[Census]),
+    'Facility Census Tracker'[LOC] = "PHP"
+)
+
+Avg Length of Stay =
+AVERAGE('Facility Census Tracker'[ALOS])
+
+Facilities at Capacity =
+COUNTROWS(
+    FILTER(
+        'Facility Census Tracker',
+        'Facility Census Tracker'[Census] >= 'Facility Census Tracker'[Capacity]
+    )
+)
+
+Available Beds =
+[Total Capacity] - [Residential Census]
+
+
+// =============================================================================
+// REVENUE MEASURES
+// =============================================================================
+
+Revenue MTD =
+CALCULATE(
+    SUM('Revenue by Payer'[Revenue]),
+    DateTable[IsCurrentMonth] = TRUE
+)
+
+Revenue Target = 1650000
+
+Revenue Pacing =
+DIVIDE([Revenue MTD], [Revenue Target], 0)
+
+Revenue vs Target =
+[Revenue MTD] - [Revenue Target]
+
+Total Revenue =
+SUM('Revenue by Payer'[Revenue])
+
+AHCCCS Revenue =
+CALCULATE(
+    SUM('Revenue by Payer'[Revenue]),
+    'Revenue by Payer'[Payer] IN {"Mercy Care", "UHCCP"}
+)
+
+AHCCCS Pct =
+DIVIDE([AHCCCS Revenue], [Total Revenue], 0)
+
+Commercial Revenue =
+CALCULATE(
+    SUM('Revenue by Payer'[Revenue]),
+    'Revenue by Payer'[Payer] IN {"Cigna", "Aetna", "Humana"}
+)
+
+Commercial Pct =
+DIVIDE([Commercial Revenue], [Total Revenue], 0)
+
+Total Claims =
+SUM('Revenue by Payer'[ClaimCount])
+
+Total Denials =
+SUM('Revenue by Payer'[DenialCount])
+
+Clean Claim Rate =
+DIVIDE(
+    [Total Claims] - [Total Denials],
+    [Total Claims],
+    0
+)
+
+Avg Revenue Per Claim =
+DIVIDE([Total Revenue], [Total Claims], 0)
+
+Denial Rate =
+DIVIDE([Total Denials], [Total Claims], 0)
+
+
+// =============================================================================
+// ADMISSIONS MEASURES
+// =============================================================================
+
+Leads MTD =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    DateTable[IsCurrentMonth] = TRUE
+)
+
+Admits MTD =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Status] = "Admitted",
+    DateTable[IsCurrentMonth] = TRUE
+)
+
+Lead to Admit Rate =
+DIVIDE([Admits MTD], [Leads MTD], 0)
+
+Avg Days to Admit =
+AVERAGEX(
+    FILTER(
+        'Admissions Pipeline',
+        'Admissions Pipeline'[Status] = "Admitted" &&
+        NOT(ISBLANK('Admissions Pipeline'[AdmitDate]))
+    ),
+    DATEDIFF(
+        'Admissions Pipeline'[ReferralDate],
+        'Admissions Pipeline'[AdmitDate],
+        DAY
+    )
+)
+
+Active Pipeline =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Status] = "Active"
+)
+
+Waitlisted Count =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Status] = "Waitlisted"
+)
+
+Lost Leads =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Status] IN {"Lost to Follow-Up", "Declined", "No-Show"}
+)
+
+Pipeline by Stage =
+COUNTROWS('Admissions Pipeline')
+
+VOB Pending =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Stage] = "VOB In Progress"
+)
+
+Assessments Scheduled =
+CALCULATE(
+    COUNTROWS('Admissions Pipeline'),
+    'Admissions Pipeline'[Stage] IN {"Assessment Scheduled", "Assessment Complete"}
+)
+
+
+// =============================================================================
+// COMPLIANCE MEASURES
+// =============================================================================
+
+Overdue Audits =
+CALCULATE(
+    COUNTROWS('Compliance Audit Calendar'),
+    'Compliance Audit Calendar'[Status] = "Overdue"
+)
+
+Upcoming Audits 30d =
+CALCULATE(
+    COUNTROWS('Compliance Audit Calendar'),
+    'Compliance Audit Calendar'[AuditDate] <= TODAY() + 30,
+    'Compliance Audit Calendar'[AuditDate] >= TODAY(),
+    'Compliance Audit Calendar'[Status] <> "Complete"
+)
+
+Completed Audits =
+CALCULATE(
+    COUNTROWS('Compliance Audit Calendar'),
+    'Compliance Audit Calendar'[Status] = "Complete"
+)
+
+Open Incidents =
+CALCULATE(
+    COUNTROWS('Incident Reports'),
+    'Incident Reports'[Status] IN {"Open", "Under Review", "Investigating"}
+)
+
+Critical Incidents =
+CALCULATE(
+    COUNTROWS('Incident Reports'),
+    'Incident Reports'[Severity] = "Critical",
+    'Incident Reports'[Status] <> "Closed"
+)
+
+Incidents MTD =
+CALCULATE(
+    COUNTROWS('Incident Reports'),
+    DateTable[IsCurrentMonth] = TRUE
+)
+
+Avg Resolution Days =
+AVERAGEX(
+    FILTER(
+        'Incident Reports',
+        NOT(ISBLANK('Incident Reports'[ResolutionDate]))
+    ),
+    DATEDIFF(
+        'Incident Reports'[IncidentDate],
+        'Incident Reports'[ResolutionDate],
+        DAY
+    )
+)
+
+
+// =============================================================================
+// STAFF / HR MEASURES
+// =============================================================================
+
+Total Staff =
+COUNTROWS('Staff Credential Tracker')
+
+Credentials Expiring 30d =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[LicenseExpiration] <= TODAY() + 30,
+    'Staff Credential Tracker'[LicenseExpiration] >= TODAY()
+)
+
+Credentials Expired =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[LicenseExpiration] < TODAY(),
+    NOT(ISBLANK('Staff Credential Tracker'[LicenseExpiration]))
+)
+
+HIPAA Compliance Rate =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('Staff Credential Tracker'),
+        'Staff Credential Tracker'[HIPAADueDate] >= TODAY()
+    ),
+    [Total Staff],
+    0
+)
+
+Credential Compliance Rate =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('Staff Credential Tracker'),
+        'Staff Credential Tracker'[Status] = "Current"
+    ),
+    [Total Staff],
+    0
+)
+
+CPR Expiring 30d =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[CPRExpiration] <= TODAY() + 30,
+    'Staff Credential Tracker'[CPRExpiration] >= TODAY()
+)
+
+FPC Expiring 30d =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[FingerprintClearance] <= TODAY() + 30,
+    'Staff Credential Tracker'[FingerprintClearance] >= TODAY()
+)
+
+Staff Action Required =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[Status] IN {"Expired", "Action Required", "Expiring Soon"}
+)
+
+Licensed Clinicians =
+CALCULATE(
+    COUNTROWS('Staff Credential Tracker'),
+    'Staff Credential Tracker'[Role] IN {"LPC", "LISAC", "LCSW"}
+)
+
+
+// =============================================================================
+// REENTRY PROGRAM MEASURES
+// =============================================================================
+
+Active Reentry Participants =
+CALCULATE(
+    COUNTROWS('Reentry Participants'),
+    'Reentry Participants'[Phase] <> "Alumni/Aftercare"
+)
+
+Total Reentry Enrolled =
+COUNTROWS('Reentry Participants')
+
+Housing Placement Rate =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('Reentry Participants'),
+        'Reentry Participants'[HousingStatus] IN {"Placed (Sober Living)", "Placed (Independent)"}
+    ),
+    COUNTROWS('Reentry Participants'),
+    0
+)
+
+Employment Rate =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('Reentry Participants'),
+        'Reentry Participants'[EmploymentStatus] IN {"Employed (PT)", "Employed (FT)"}
+    ),
+    COUNTROWS('Reentry Participants'),
+    0
+)
+
+Court Compliance Rate =
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('Reentry Participants'),
+        'Reentry Participants'[CourtCompliance] = "Compliant",
+        'Reentry Participants'[CourtInvolved] = TRUE
+    ),
+    CALCULATE(
+        COUNTROWS('Reentry Participants'),
+        'Reentry Participants'[CourtInvolved] = TRUE
+    ),
+    0
+)
+
+Court Involved Count =
+CALCULATE(
+    COUNTROWS('Reentry Participants'),
+    'Reentry Participants'[CourtInvolved] = TRUE
+)
+
+Avg Days in Program =
+AVERAGEX(
+    'Reentry Participants',
+    DATEDIFF('Reentry Participants'[EnrollDate], TODAY(), DAY)
+)
+
+Residential Phase Count =
+CALCULATE(
+    COUNTROWS('Reentry Participants'),
+    'Reentry Participants'[Phase] = "Residential Stabilization"
+)
+
+Community Transition Count =
+CALCULATE(
+    COUNTROWS('Reentry Participants'),
+    'Reentry Participants'[Phase] = "Community Transition"
+)
+
+Alumni Count =
+CALCULATE(
+    COUNTROWS('Reentry Participants'),
+    'Reentry Participants'[Phase] = "Alumni/Aftercare"
+)
+
+
+// =============================================================================
+// REFERRAL PARTNER MEASURES
+// =============================================================================
+
+Active Partners =
+CALCULATE(
+    COUNTROWS('Referral Partners'),
+    'Referral Partners'[Status] = "Active"
+)
+
+Total Partners =
+COUNTROWS('Referral Partners')
+
+Partner Referrals MTD =
+SUM('Referral Partners'[ReferralsMTD])
+
+Partner Admits MTD =
+SUM('Referral Partners'[AdmitsMTD])
+
+Partner Conversion Rate =
+DIVIDE(
+    [Partner Admits MTD],
+    [Partner Referrals MTD],
+    0
+)
+
+Partners Needing Follow-Up =
+CALCULATE(
+    COUNTROWS('Referral Partners'),
+    'Referral Partners'[Status] = "Follow-Up"
+)
+
+Partners Without Agreement =
+CALCULATE(
+    COUNTROWS('Referral Partners'),
+    'Referral Partners'[AgreementOnFile] = FALSE
+)
+
+New Partners =
+CALCULATE(
+    COUNTROWS('Referral Partners'),
+    'Referral Partners'[Status] = "New Partner"
+)
+
+
+// =============================================================================
+// MARKETING MEASURES
+// =============================================================================
+
+Marketing Spend MTD =
+SUM('Marketing Campaigns'[SpendMTD])
+
+Total Marketing Leads =
+SUM('Marketing Campaigns'[Leads])
+
+Avg CPL =
+DIVIDE(
+    [Marketing Spend MTD],
+    [Total Marketing Leads],
+    0
+)
+
+Marketing Admits =
+SUM('Marketing Campaigns'[Admits])
+
+Avg CPA =
+DIVIDE(
+    [Marketing Spend MTD],
+    [Marketing Admits],
+    0
+)
+
+Live Campaigns =
+CALCULATE(
+    COUNTROWS('Marketing Campaigns'),
+    'Marketing Campaigns'[Status] = "Live"
+)
+
+Organic Leads =
+CALCULATE(
+    SUM('Marketing Campaigns'[Leads]),
+    'Marketing Campaigns'[Channel] IN {"SEO/Organic", "LegitScript/Directories"}
+)
+
+Paid Leads =
+CALCULATE(
+    SUM('Marketing Campaigns'[Leads]),
+    'Marketing Campaigns'[Channel] IN {"Google Ads", "Facebook/Instagram"}
+)
+
+Organic vs Paid Ratio =
+DIVIDE([Organic Leads], [Paid Leads], 0)
+
+ROAS =
+DIVIDE(
+    [Marketing Admits] * 15000,  // Estimated avg revenue per admit
+    [Marketing Spend MTD],
+    0
+)

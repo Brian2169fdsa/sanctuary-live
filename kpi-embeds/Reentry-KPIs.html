@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Reentry Program KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #e8732a, #b05820); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .pipeline { display: flex; gap: 4px; margin-bottom: 16px; align-items: stretch; }
+        .phase { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; text-align: center; position: relative; }
+        .phase .name { font-size: 10px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.3px; margin-bottom: 4px; }
+        .phase .count { font-size: 24px; font-weight: 700; color: var(--text); }
+        .phase .arrow { position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--border); font-size: 16px; z-index: 1; }
+        .phase.active { border-color: var(--primary); border-width: 2px; }
+        .gauge-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .gauge { background: var(--bg); border-radius: 8px; padding: 16px; text-align: center; border: 1px solid var(--border); }
+        .gauge .title { font-size: 11px; text-transform: uppercase; color: var(--text2); margin-bottom: 8px; }
+        .gauge .ring { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
+        .gauge .detail { font-size: 11px; color: var(--text2); }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Reentry Program — Participant Pipeline</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card accent">
+            <div class="label">Active Participants</div>
+            <div class="value">5</div>
+            <div class="sub">6 total enrolled / 1 alumni</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Housing Placed</div>
+            <div class="value">33%</div>
+            <div class="sub">2 of 6 placed</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Employed</div>
+            <div class="value">33%</div>
+            <div class="sub">1 FT / 1 PT</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Court Compliant</div>
+            <div class="value">75%</div>
+            <div class="sub">3 of 4 court-involved compliant</div>
+        </div>
+    </div>
+
+    <div class="pipeline">
+        <div class="phase active">
+            <div class="name">Residential Stabilization</div>
+            <div class="count">2</div>
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="phase">
+            <div class="name">PHP Step-Down</div>
+            <div class="count">1</div>
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="phase">
+            <div class="name">IOP + Housing</div>
+            <div class="count">1</div>
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="phase">
+            <div class="name">Community Transition</div>
+            <div class="count">1</div>
+            <span class="arrow">&#9654;</span>
+        </div>
+        <div class="phase" style="border-color: var(--success);">
+            <div class="name">Alumni / Aftercare</div>
+            <div class="count">1</div>
+        </div>
+    </div>
+
+    <div class="gauge-row">
+        <div class="gauge">
+            <div class="title">Housing Placement</div>
+            <div class="ring" style="background: conic-gradient(var(--success) 0% 33%, var(--border) 33% 100%);">33%</div>
+            <div class="detail">1 Sober Living / 1 Independent</div>
+        </div>
+        <div class="gauge">
+            <div class="title">Employment</div>
+            <div class="ring" style="background: conic-gradient(var(--accent) 0% 33%, var(--border) 33% 100%);">33%</div>
+            <div class="detail">1 FT / 1 PT / 1 Training</div>
+        </div>
+        <div class="gauge">
+            <div class="title">Court Compliance</div>
+            <div class="ring" style="background: conic-gradient(var(--success) 0% 75%, var(--warning) 75% 100%);">75%</div>
+            <div class="detail">3 compliant / 1 check-in due</div>
+        </div>
+    </div>
+</body>
+</html>

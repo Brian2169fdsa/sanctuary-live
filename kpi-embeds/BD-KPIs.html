@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Business Development KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #3aa8c8, #2d8da8); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .partner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+        .partner { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .partner .info .name { font-size: 13px; font-weight: 600; }
+        .partner .info .type { font-size: 11px; color: var(--text2); }
+        .partner .stats { text-align: right; }
+        .partner .stats .refs { font-size: 16px; font-weight: 700; color: var(--primary); }
+        .partner .stats .conv { font-size: 11px; color: var(--text2); }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Business Development — Referral Network</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card good">
+            <div class="label">Active Partners</div>
+            <div class="value">6</div>
+            <div class="sub">8 total / 1 new / 1 follow-up</div>
+        </div>
+        <div class="kpi-card accent">
+            <div class="label">Referrals MTD</div>
+            <div class="value">49</div>
+            <div class="sub">From all partner channels</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Partner Admits</div>
+            <div class="value">20</div>
+            <div class="sub">41% conversion rate</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">Agreements Pending</div>
+            <div class="value">2</div>
+            <div class="sub">Dr. Kim, Dignity Health</div>
+        </div>
+    </div>
+
+    <div class="partner-grid">
+        <div class="partner">
+            <div class="info"><div class="name">Banner Desert Medical Center</div><div class="type">Hospital ED — East Valley</div></div>
+            <div class="stats"><div class="refs">12 refs</div><div class="conv">42% conv.</div></div>
+        </div>
+        <div class="partner">
+            <div class="info"><div class="name">Solari Crisis Services</div><div class="type">Crisis Services — Metro PHX</div></div>
+            <div class="stats"><div class="refs">9 refs</div><div class="conv">33% conv.</div></div>
+        </div>
+        <div class="partner">
+            <div class="info"><div class="name">HonorHealth Scottsdale</div><div class="type">Hospital ED — Scottsdale</div></div>
+            <div class="stats"><div class="refs">8 refs</div><div class="conv">38% conv.</div></div>
+        </div>
+        <div class="partner">
+            <div class="info"><div class="name">Maricopa County Probation</div><div class="type">Courts — County-Wide</div></div>
+            <div class="stats"><div class="refs">6 refs</div><div class="conv">67% conv.</div></div>
+        </div>
+        <div class="partner">
+            <div class="info"><div class="name">Terros Health</div><div class="type">Community Org — Metro PHX</div></div>
+            <div class="stats"><div class="refs">5 refs</div><div class="conv">40% conv.</div></div>
+        </div>
+        <div class="partner">
+            <div class="info"><div class="name">Oxford House Phoenix North</div><div class="type">Sober Living — North Phoenix</div></div>
+            <div class="stats"><div class="refs">4 refs</div><div class="conv">25% conv.</div></div>
+        </div>
+    </div>
+</body>
+</html>

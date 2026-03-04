@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — Administration KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #605e5c, #3b3a39); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+        .tab { padding: 8px 16px; border-radius: 6px 6px 0 0; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); border-bottom: none; background: var(--bg); color: var(--text2); }
+        .tab.active { background: #fff; color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .payer-table { width: 100%; border-collapse: collapse; }
+        .payer-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: var(--text2); padding: 8px; border-bottom: 2px solid var(--border); }
+        .payer-table td { padding: 8px; font-size: 13px; border-bottom: 1px solid var(--border); }
+        .payer-table tr:hover { background: var(--bg); }
+        .payer-bar { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; min-width: 60px; }
+        .payer-bar .fill { height: 100%; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Administration — Billing &amp; Compliance</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card good">
+            <div class="label">Revenue MTD</div>
+            <div class="value">$1.65M</div>
+            <div class="sub">100% of target</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Clean Claim Rate</div>
+            <div class="value">95.4%</div>
+            <div class="sub">Target: 95%</div>
+        </div>
+        <div class="kpi-card accent">
+            <div class="label">Total Claims</div>
+            <div class="value">1,006</div>
+            <div class="sub">49 denials (4.9%)</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">AHCCCS Mix</div>
+            <div class="value">52%</div>
+            <div class="sub">Mercy Care 29% / UHCCP 23%</div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab active">Payer Mix</div>
+        <div class="tab">Compliance</div>
+        <div class="tab">Facilities</div>
+    </div>
+
+    <table class="payer-table">
+        <thead>
+            <tr><th>Payer</th><th>Revenue</th><th>Share</th><th></th><th>Claims</th><th>Denials</th><th>Clean %</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Mercy Care</strong></td><td>$485,000</td><td>29.4%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:29.4%; background: var(--primary);"></div></div></td>
+                <td>312</td><td>12</td><td>96.2%</td>
+            </tr>
+            <tr>
+                <td><strong>UHCCP</strong></td><td>$380,000</td><td>23.0%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:23%; background: var(--accent);"></div></div></td>
+                <td>245</td><td>8</td><td>96.7%</td>
+            </tr>
+            <tr>
+                <td>Cigna</td><td>$310,000</td><td>18.8%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:18.8%; background: var(--warning);"></div></div></td>
+                <td>178</td><td>14</td><td>92.1%</td>
+            </tr>
+            <tr>
+                <td>Aetna</td><td>$195,000</td><td>11.8%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:11.8%; background: var(--success);"></div></div></td>
+                <td>124</td><td>6</td><td>95.2%</td>
+            </tr>
+            <tr>
+                <td>Humana</td><td>$145,000</td><td>8.8%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:8.8%; background: #986f0b;"></div></div></td>
+                <td>95</td><td>4</td><td>95.8%</td>
+            </tr>
+            <tr>
+                <td>Private Pay</td><td>$85,000</td><td>5.2%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:5.2%; background: #605e5c;"></div></div></td>
+                <td>18</td><td>0</td><td>100%</td>
+            </tr>
+            <tr>
+                <td>SCA/Other</td><td>$52,000</td><td>3.2%</td>
+                <td><div class="payer-bar"><div class="fill" style="width:3.2%; background: #c8c6c4;"></div></div></td>
+                <td>34</td><td>5</td><td>85.3%</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

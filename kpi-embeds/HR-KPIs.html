@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanctuary — HR KPIs</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', -apple-system, sans-serif; background: #fff; color: #323130; padding: 16px; }
+        :root { --primary: #e8732a; --accent: #4dc8e8; --success: #107c10; --warning: #f5a623; --danger: #d83b01; --bg: #faf9f8; --border: #edebe9; --text: #323130; --text2: #605e5c; }
+        .kpi-header { background: linear-gradient(135deg, #107c10, #0b5e0b); color: #fff; padding: 16px 24px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .kpi-header h2 { font-size: 18px; font-weight: 600; }
+        .kpi-header .date { font-size: 13px; opacity: 0.85; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+        .kpi-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi-card .label { font-size: 11px; text-transform: uppercase; color: var(--text2); letter-spacing: 0.5px; margin-bottom: 4px; }
+        .kpi-card .value { font-size: 28px; font-weight: 700; color: var(--text); }
+        .kpi-card .sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+        .kpi-card.alert { border-left: 4px solid var(--danger); }
+        .kpi-card.good { border-left: 4px solid var(--success); }
+        .kpi-card.warn { border-left: 4px solid var(--warning); }
+        .kpi-card.accent { border-left: 4px solid var(--accent); }
+        .training-matrix { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 12px; }
+        .training-matrix th { text-align: left; padding: 8px; font-size: 11px; text-transform: uppercase; color: var(--text2); border-bottom: 2px solid var(--border); }
+        .training-matrix td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+        .check { color: var(--success); font-weight: 700; }
+        .warn-icon { color: var(--warning); font-weight: 700; }
+        .alert-icon { color: var(--danger); font-weight: 700; }
+    </style>
+</head>
+<body>
+    <div class="kpi-header">
+        <h2>Human Resources — Workforce Compliance</h2>
+        <span class="date">March 2026</span>
+    </div>
+
+    <div class="kpi-grid">
+        <div class="kpi-card good">
+            <div class="label">Total Staff</div>
+            <div class="value">15</div>
+            <div class="sub">8 licensed clinicians</div>
+        </div>
+        <div class="kpi-card good">
+            <div class="label">Credential Compliance</div>
+            <div class="value">73%</div>
+            <div class="sub">11/15 fully current</div>
+        </div>
+        <div class="kpi-card warn">
+            <div class="label">Expiring 30 Days</div>
+            <div class="value">2</div>
+            <div class="sub">S. Thompson, J. Martinez</div>
+        </div>
+        <div class="kpi-card alert">
+            <div class="label">Action Required</div>
+            <div class="value">4</div>
+            <div class="sub">2 expiring / 1 expired / 1 action req</div>
+        </div>
+    </div>
+
+    <table class="training-matrix">
+        <thead>
+            <tr><th>Staff</th><th>Role</th><th>License</th><th>FPC</th><th>CPR</th><th>HIPAA</th><th>Cultural</th><th>Trauma</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Dr. M. Reyes</td><td>LPC</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--success)">Current</strong></td></tr>
+            <tr><td>S. Thompson</td><td>LISAC</td><td class="warn-icon">&#9888;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--warning)">Expiring</strong></td></tr>
+            <tr><td>K. Patel</td><td>LCSW</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--success)">Current</strong></td></tr>
+            <tr><td>J. Martinez</td><td>LPC</td><td class="alert-icon">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--warning)">Expiring</strong></td></tr>
+            <tr><td>D. Morales</td><td>BHT</td><td>N/A</td><td class="check">&#10003;</td><td class="alert-icon">&#10007;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--danger)">Expired</strong></td></tr>
+            <tr><td>M. Johnson</td><td>LAC</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="warn-icon">&#9888;</td><td class="warn-icon">&#9888;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--danger)">Action Req</strong></td></tr>
+            <tr><td>P. Sharma</td><td>Admissions</td><td>N/A</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td class="warn-icon">&#9888;</td><td class="check">&#10003;</td><td class="check">&#10003;</td><td><strong style="color:var(--danger)">Action Req</strong></td></tr>
+        </tbody>
+    </table>
+</body>
+</html>
